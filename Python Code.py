@@ -28,18 +28,3 @@ cursor= conn.cursor()
 sql= "select * from setting;"
 cursor.execute(sql)
 records= cursor.fetchall()
-
-for record in records:
-  if record[1]=='Hotel_Name':
-    hotel_name= record[2]
-  if record[1]=='Address':
-    address= record[2]
-  if record[1]=='Phone_Number':
-    phone= record[2]
-  if record[1]=='Email':
-    email= record[2]
-  if record[1]=='GST':
-    gst= record[2]
-  if record[1]=='ST':
-    st= record[2]
-    
