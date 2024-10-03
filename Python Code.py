@@ -1,8 +1,9 @@
-# Project Name: HOTEL MANAGEMENT PROJECT
-# Made By: NAGESH MATHUR AND NAKSHATRA MUNSHI
-# Class: 12th-A 
-# Session: 2024-2025
-# Subject: COMPUTER SCIENCE
+# Project Name : HOTEL MANAGEMENT PROJECT
+# Made By : NAGESH MATHUR AND NAKSHATRA MUNSHI
+# Class : 12th-A 
+# Session : 2024-2025
+# Subject : COMPUTER SCIENCE
+
 
 import mysql.connector
 from datetime import date
