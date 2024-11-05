@@ -78,9 +78,72 @@ cursor.execute(sql)
 conn.close()
 wait = input('\n\n\n Record updated ................ Press Any Key To Continue........')
 
+def clear():
+  for _ in range(65):
+    print()
 
+def room_exist(room_no):
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  cursor = conn.cursor()
+  sql = "select * from rooms where room_no = "+room_no+";"
+  cursor.execute(sql)
+  record = cursor.fetchone()
+  return record
+
+def customer_exist(cust_no):
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  cursor = conn.cursor()
+  sql = "select * from customer where id = "+cust_no+";"
+  cursor.execute(sql)
+  record = cursor.fetchone()
+  return record
+
+def add_room():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  cursor = conn.cursor()
+  clear()
+  print('Add New Room - Screen')
+  print('-'*120)
+  room_no = input('\n Enter Room No : ')
+  room_type = input('\n Enter Room Type (AC / DELUX / SUPER DELUX / QUEEN DELIGHT / KINGS SPECIAL / SUPER RICH SPECIAL) : ')
+  room_rent = input('\n Enter Room Rent (INR) : ')
+  room_bed = input('\n Enter Room Bed Type  (SINGLE / DOUBLE / TRIPLE) : ')
+  sql = 'insert into rooms (room_no, room_type, room_rent, bed, status) values ('+room_no+', "'+room_type.upper()+'", '+room_rent+', "'+room_bed.upper()+'", "free");'
+  
+  result = room_exist(room_no)
+  if result is None:
+    cursor.execute(sql)
+  else:
+    print('\n\n\n Room No', room_no, 'Already Exist In Database')
+  conn.close()
+  wait = input('\n\n\n Press Any Key To Continue.....')
+
+def modify_room():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  cursor = conn.cursor()
+  clear()
+  
 
 
 
   
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
