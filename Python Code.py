@@ -116,34 +116,30 @@ def add_room():
   else:
     print('\n\n\n Room No', room_no, 'Already Exist In Database')
   conn.close()
-  wait = input('\n\n\n Press Any Key To Continue.....')
+  wait = input('\n\n\n Press Any Key To Continue..... ')
 
 def modify_room():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
   cursor = conn.cursor()
   clear()
+  print('Change Room Information')
+  print('*'*120)
+  print('1.    Room Type')
+  print('2.    Room Rent')
+  print('3.    Room Bed')
+  choice = int(input('Enter your choice : '))
+  field_name = ''
+  if choice == 1:
+    field_name = 'room_type'
+  if choice == 2:
+    field_name = 'room_rent'
+  if choice == 3:
+    field_name = 'room_bed'
+  room_no = input('Enter Room No : ')
+  value = input('Enter New Value : ')
+  sql = 'update rooms set '+field_name+' = '+value+' where room_no + ';''
+  cursor.execute(sql)
+  wait = input('\n\n\n Record Updated ................. Press Any Key To Continue......')
+
+def add_customer():
   
-
-
-
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
