@@ -142,4 +142,7 @@ def modify_room():
   wait = input('\n\n\n Record Updated ................. Press Any Key To Continue......')
 
 def add_customer():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  
+  
   
