@@ -256,7 +256,7 @@ def bill_generation():
   print('Amount Payable : ', payable_amount)
   sql1 = 'update rooms set status = "free" where room_no =' +room_id+ ';'
   sql2 = 'update booking set check_out = "'+str(check_out)+'" where room_id = ' +room_id+ 'and cust_id = ' +cust_id+ ';'
-  sql3 = 'insert into bill (book_id, amount, bill_date, gst, st) values ('+str(book_id)+', '+str(payable_amount)+', "'str(check_out)'", '+str(gst)+', '+str(st)+')'
+  sql3 = 'insert into bill (book_id, amount, bill_date, gst, st) values ('+str(book_id)+', '+str(payable_amount)+', "'str(check_out)'", '+str(gst)+', '+str(st)+');'
   cursor.execute(sql1)
   cursor.execute(sql2)
   cursor.execute(sql3)
@@ -280,6 +280,23 @@ def search_rooms():
   conn.close()
   wait = input('\n\n\n Press Any Key To Continue ...........')
 
+def search_customer():
+  conn = mysql.connctor.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
+  cursor = conn.cursor()
+  clear()
+  print('Search Customer Database')
+  print('*'*120)
+  print('1.    Customer Name')
+  print('2.    Customer Address')
+  print('3.    Customer Phone')
+  print('4.    Customer Email')
+  print('5.    Id Proof')
+  print('6.    Id Proof No')
+  choice = int(input('Enter Your Choice : '))
+  field_name = ''
+  if choice == 1 :
+    
+  
   
 
 
