@@ -24,7 +24,7 @@ def settings():
   global gst
   global st
 
-conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
 cursor = conn.cursor()
 sql = "select * from setting;"
 cursor.execute(sql)
@@ -45,7 +45,7 @@ for record in records:
     st = record[2]
 
 def system_settings():
-  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   clear()
   print('Change System Settings')
@@ -83,7 +83,7 @@ def clear():
     print()
 
 def room_exist(room_no):
-  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   sql = "select * from rooms where room_no = "+room_no+";"
   cursor.execute(sql)
@@ -91,7 +91,7 @@ def room_exist(room_no):
   return record
 
 def customer_exist(cust_no):
-  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   sql = "select * from customer where id = "+cust_no+";"
   cursor.execute(sql)
@@ -99,7 +99,7 @@ def customer_exist(cust_no):
   return record
 
 def add_room():
-  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   clear()
   print('Add New Room - Screen')
@@ -119,7 +119,7 @@ def add_room():
   wait = input('\n\n\n Press Any Key To Continue..... ')
 
 def modify_room():
-  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   clear()
   print('Change Room Information')
@@ -142,7 +142,9 @@ def modify_room():
   wait = input('\n\n\n Record Updated ................. Press Any Key To Continue......')
 
 def add_customer():
-  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '')
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
+  cursor = conn.cursor()
+  clear()
   
   
   
