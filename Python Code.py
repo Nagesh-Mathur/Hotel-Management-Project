@@ -405,6 +405,22 @@ def report_room_status():
   wait = input('\n\n\n Press Any Key To Continue .......')
 
 def report_booking_status():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
+  cursor = conn.cursor()
+  sql = 'select b.book_id, room_no, check_in, check_out, advance, name, address, phone \ where b.room_id = r.id and b.cust_id and check_out is NULL;'
+  cursor.execute(sql)
+  records = cursor.fetchall()
+  clear()
+  print('Booking Status - Report')
+  print('-'*120)
+  print('{:10s} {:10s} {:20s} {:20s} {:>30s} {:20s} {:30s} {:15s}'.format('Booking Id', 'Room No', 'Check In', 'Check Out', 'Advance', 'Name', 'Address', 'Phone'))
+  for idr, no, check_in, check_out, advance, name, addr, phone in records:
+    print('{:10d} {:10d} {:20s} {:20s} {:10.2f} {:20s} {:30s} {:15s}'.format(idr, no, str(check_in), str(check_out), advance, name, addr, phone))
+  conn.close()
+  wait = input('\n\n\n Press Any Key To Continue ........')
+
+def report_menu():
+    
   
 
     
