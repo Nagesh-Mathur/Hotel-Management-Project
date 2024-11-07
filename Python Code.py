@@ -420,7 +420,79 @@ def report_booking_status():
   wait = input('\n\n\n Press Any Key To Continue ........')
 
 def report_menu():
-    
+  while True :
+    clear()
+    print('Report Menu')
+    print('\n 1.    Room Status')
+    print('\n 2.    Booking Status')
+    print('\n 3.    Today Collection')
+    print('\n 4.    Monthly Collection')
+    print('\n 5.    Back To Main Menu')
+    print('\n\n')
+    choice = int(input('Enter Your Choice : '))
+    if choice == 1 :
+      report_room_status()
+    if choice == 2 :
+      report_booking_status
+    if choice == 3 :
+      report_today_collection
+    if choice == 4 :
+      report_monthly_collection
+    if choice == 5 :
+      break
+
+def change_room_status():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
+  cursor = conn.cursor()
+  clear()
+  room_no = input('Enter Room No : ')
+  status = input('Enter current Status (Renovation / Modification) : ')
+  sql = 'update rooms set status ="'+status+'" where room_no =' +room_no+ ';'
+  cursor.execute(sql)
+  print('\n\n Room Status Updated')
+  wait = input('\n\n\n Press Any Key To Continue')
+
+def main_menu():
+  while True:
+    clear()
+    print('H O T E L     M A N A G E M E N T     S Y S T E M')
+    print('*'*120)
+    print('\n 1.    Add New Room')
+    print('\n 2.    Add Customer')
+    print('\n 3.    Modify Room Information')
+    print('\n 4.    Modify Customer Information')
+    print('\n 5.    Room Booking')
+    print('\n 6.    Bill Generation')
+    print('\n 7.    Search Database')
+    print('\n 8.    Report Menu')
+    print('\n 9.    Settings')
+    print('\n10.    Close Application')
+    print('\n\n')
+    choice = int(input('Enter Your Choice : '))
+    if choice == 1 :
+      add_room()
+    if choice == 2 :
+      add_customer()
+    if choice == 3 :
+      modify_room()
+    if choice == 4 :
+      modify_customer()
+    if choice == 5 :
+      room_booking()
+    if choice == 6 :
+      bill_generation()
+    if choice == 7 :
+      search_menu()
+    if choice == 8 :
+      report_menu()
+    if choice == 9 :
+      system_settings()
+    if choice == 10 :
+      break
+      
+if__name__ == "__main__" :
+  settings()
+  main_menu()
   
 
     
