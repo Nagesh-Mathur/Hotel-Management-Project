@@ -367,7 +367,44 @@ def search_bills():
   wait = input('\n\n\n Press Any Key To Continue.........')
 
 def search_menu():
-  
+  while True:
+    clear()
+    print('Search Menu')
+    print('*'*120)
+    print("\n 1.    Room Status")
+    print('\n 2.    Booking Status')
+    print('\n 3.    Customer Details')
+    print('\n 4.    Bills')
+    print('\n 5.    Back To Main Menu')
+    print('\n\n')
+    choice = int(input('Enter Your Choice : '))
+    if choice == 1 :
+      search_rooms()
+    if choice == 2 :
+      search_booking()
+    if choice == 3 :
+      search_customer()
+    if choice == 4 :
+      search_bills()
+    if choice == 5 :
+      break
 
+def report_room_status():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
+  cursor = conn.cursor()
+  sql = 'select * from rooms'
+  cursor.execute(sql)
+  records = cursor.fetchall()
+  clear()
+  print('Room Status - Report')
+  print('- '*120)
+  print('{:10s} {:10s} {:20s} {:20s} {:>40s} {:>30s} '.format('Room Id', 'Room No', 'Room Type', 'Rent', 'Bedding', 'Status'))
+  for idr, no, rtype, rent, bed, status in records :
+    print('{:<10d} {:<10d} {:20s} {:<7.2f} {:>40s} {:30s}'.format(idr, no, rtype, rent, bed, status))
+  conn.close()
+  wait = input('\n\n\n Press Any Key To Continue .......')
+
+def report_booking_status():
+  
 
     
