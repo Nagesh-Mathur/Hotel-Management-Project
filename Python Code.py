@@ -295,8 +295,78 @@ def search_customer():
   choice = int(input('Enter Your Choice : '))
   field_name = ''
   if choice == 1 :
-    
-  
+    field_name = 'name'
+  if choice == 2 :
+    field_name = 'address'
+  if choice == 3 :
+    field_name = 'phone'
+  if choice == 4 :
+    field_name = 'email'
+  if choice == 5 :
+    field_name = 'id_proof'
+  if choice == 6 :
+    field_name = 'id_proof_no'
+  value = input('Enter Value That You want To Search : ')
+  if field_name == 'id' :
+    sql = 'select * from customer where ' +field_name+ '=' +value+ ';'
+  else :
+    sql = 'select * from customer where ' +field_name+ 'like "%' +value+'%";'
+  print(sql)
+  cursor.execute(sql)
+  records = cursor.fetchall()
+  clear()
+  print('Search Result For {} = {}'.format(field_name, value))
+  print('*'*140)
+  print('{} {:20s} {:30s} {:15s} {:30s} {:20s} {:15s}'.format('Id', 'Name', 'Address', 'Phone', 'Email', 'Id Used', 'Id No'))
+  for record in records :
+  print('{} {:20s} {:30s} {:15s} {:30s} {:20s} {:15s}'.format(record[0], record[1], record[2], record[3], record[4], record[5], record[6]))
+  conn.close()
+  wait = input('\n\n\n Press Any Key To Continue..........')
+
+def search_booking():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
+  cursor = conn.cursor()
+  cust_no = input('Enter Customer No :')
+  sql = 'select book_id, r.room_no, c.name, check_in, advance  from booking b, customer c, rooms r where b.room_id = r.id AND b.cust_id =' +cust_id+
+  cursor.execute(sql)
+  record = cursor.fetchall()
+  clear()
+  print('Booking Information For Customer Id : {}'.format(cust_no))
+  print('{} {} {} {} {}'.format('Id', 'Room Id', 'Customer Name', 'Check In','Advance'))
+  print('*'*140)
+  for record in records:
+    print('{} {} {} {} {}'.format(record[0], record[1], record[2], record[3], record[4]))
+    conn.close()\
+    wait = input('\n\n\n Press Any Key To Continue ............')
+
+def search_bills():
+  conn = mysql.connector.connect(host = 'localhost', database = 'hotel',  user = 'root', password = 'Nagesh@38')
+  cursor = conn.cursor()
+  bill_no = input('Enter Bill No : ')
+  sql = 'select bill.bill_id, bill.amount, bill.date, gst, st, b.book_id, check_in, check_out, advance, name, address, phone, email, room_no \ from bill, booking b, customer c, rooms r \ where bill.book_id = b.book_id \ and b.room_id = r.id and b.cust_id = c.id AND NOT check_out is NULL AND \ bill_id = ' +bill_no+ ';'
+  cursor.execute(sql)
+  record = cursor.fetchone()
+  clear()
+  print('Bill Information For Bill No : {}'.format(bill_no))
+  print('*'*140)
+  print('Bill No', record[0])
+  print('Amount', record[1])
+  print('Bill Date', record[2])
+  print('GST Charged', record[3])
+  print('Service Tax Charged', record[4])
+  print('Booking Id', record[5])
+  print('Room Id', record[13])
+  print('Check In Date', record[6])
+  print('Check Out Date', record[7])
+  print('Advance Paid', record[8])
+  print('Customer Name', record[9])
+  print('Customer Address', record[10])
+  print('Customer Phone', record[11])
+  print('Customer Email Id', record[12])
+  conn.close()
+  wait = input('\n\n\n Press Any Key To Continue.........')
+
+def search_menu():
   
 
 
