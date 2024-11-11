@@ -70,7 +70,7 @@ def system_settings():
   if choice == 6:
     field_name = 'st'
   value = input('Enter New value:')
-  sql = 'update setting set value = '+value+' where field_name = "'+ field_name+'";'
+  sql = "update setting set value =" +value+ "where field_name =" + field_name+ ";"
   cursor.execute(sql)
   conn.close()
   wait = input('\n\n\n Record updated ................ Press Any Key To Continue........')
@@ -82,7 +82,7 @@ def clear():
 def room_exist(room_no):
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
-  sql = "select * from rooms where room_no = "+room_no+";"
+  sql = "select * from rooms where room_no =" +room_no+ ";"
   cursor.execute(sql)
   record = cursor.fetchone()
   return record
@@ -90,7 +90,7 @@ def room_exist(room_no):
 def customer_exist(cust_no):
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
-  sql = "select * from customer where id = "+cust_no+";"
+  sql = "select * from customer where id =" +cust_no+ ";"
   cursor.execute(sql)
   record = cursor.fetchone()
   return record
@@ -105,7 +105,8 @@ def add_room():
   room_type = input('\n Enter Room Type (AC / DELUX / SUPER DELUX / QUEEN DELIGHT / KINGS SPECIAL / SUPER RICH SPECIAL) : ')
   room_rent = input('\n Enter Room Rent (INR) : ')
   room_bed = input('\n Enter Room Bed Type  (SINGLE / DOUBLE / TRIPLE) : ')
-  sql = 'insert into rooms (room_no, room_type, room_rent, bed, status) values ('+room_no+', "'+room_type.upper()+'", '+room_rent+', "'+room_bed.upper()+'", "free");'
+  sql = "insert into rooms (room_no, room_type, room_rent, bed, status) values \
+        (" +room_no+ "," +room_type.upper()+ "," +room_rent+ "," +room_bed.upper()+ "," "free" ");"
   result = room_exist(room_no)
   if result is None:
     cursor.execute(sql)
@@ -133,7 +134,7 @@ def modify_room():
     field_name = 'room_bed'
   room_no = input('Enter Room No : ')
   value = input('Enter New Value : ')
-  sql = 'update rooms set '+field_name+' = '+value+' where room_no + ';''
+  sql = "update rooms set" +field_name+ '=' +value+ "where room_no =" +room_no+ ";"
   cursor.execute(sql)
   wait = input('\n\n\n Record Updated ................. Press Any Key To Continue......')
 
@@ -152,7 +153,8 @@ def add_customer():
   males = input('\n Enter Total Males : ')
   females = input('\n Enter Total Females : ')
   children = input('\n Enter Total Children : ')
-  sql = 'insert into customer(name, address, phone, email, id_proof, id_proof_no, males, females, children) values \ ("'+name+'", "'+address.upper()+'", "'+phone+'", "'+email.upper()+'", "'+id_proof.upper()+'", "'+id_proof_no.upper()+'", "'+males+'", "'+females+'", "'+children+'" )'
+  sql = "insert into customer(name, address, phone, email, id_proof, id_proof_no, males, females, children) values \
+        (" +name+ "," +address+ "," +phone+ "," +email+ "," +id_proof+ "," +id_proof_no+ "," +males+ "," +females+ "," +children+ ");"
   cursor.execute(sql)
   print('\n\n\n Customer Added Successfully .......... ')
   conn.close()
@@ -195,7 +197,7 @@ def modify_customer():
     field_name = 'children'
   cust_no = input('Enter Customer No : ')
   value = input('Enter New Value : ')
-  sql = 'update customer set ' +field_name+ '=' +\value+ 'where id = ' +cust_no+ ';'
+  sql = "update customer set" +field_name+ "=" +value+ "where id =" +cust_no+ ";"
   cursor.execute(sql)
   wait = input('\n\n\n Record Updated ........... Press Any Key To Continue........')
 
@@ -206,8 +208,9 @@ def room_booking():
   cust_id = input('Enter Customer Id : ')
   check_in = input('Enter Check In Date (YYYY-MM-DD) : ')
   advance = input('Enter Advance Amount : ')
-  sql1 = 'update rooms set status = "occupied" where id =' +room_id+ ';'
-  sql2 = 'insert into booking (room_id, cust_id, check-in, advance) values ('+room_id+', 'cust_id', 'check_in', 'advance');'
+  sql1 = "update rooms set status =" "occupied" "where id =" +room_id+ ";"
+  sql2 = "insert into booking (room_id, cust_id, check-in, advance) values \
+(" +room_id+ "," +cust_id+ "," +check_in+ "," +advance+ ");"
   #print(sql2)
   #print(sql1)
   result = room_exist(room_id)
@@ -230,7 +233,7 @@ def bill_generation():
   cursor = conn.cursor()
   room_id = input('Enter Room No To Book : ')
   cust_id = input('Enter Customer Id : ')
-  sql = 'select * from booking where cust_id = ' +cust_id+ ' and room_id = '+room_id+' and check_out is NULL;'
+  sql = "select * from booking where cust_id = " +cust_id+ "and room_id =" +room_id+  "and check_out is NULL;"
   cursor.execute(sql)
   record = cursor.fetchone()
   clear()
@@ -254,9 +257,10 @@ def bill_generation():
   print('Total Amount : ', amount )
   print('Advance : ', advance, '\n GST ({}) : {}' .format(gst, gst_amount), '\n Service Tax ({}) : {}' .format(st, st_amount))
   print('Amount Payable : ', payable_amount)
-  sql1 = 'update rooms set status = "free" where room_no =' +room_id+ ';'
-  sql2 = 'update booking set check_out = "'+str(check_out)+'" where room_id = ' +room_id+ 'and cust_id = ' +cust_id+ ';'
-  sql3 = 'insert into bill (book_id, amount, bill_date, gst, st) values ('+str(book_id)+', '+str(payable_amount)+', "'str(check_out)'", '+str(gst)+', '+str(st)+');'
+  sql1 = "update rooms set status =" "free" "where room_no =" +room_id+ ";"
+  sql2 = "update booking set check_out =" +str(check_out)+ "where room_id =" +room_id+ "and cust_id =" +cust_id+ ";"
+  sql3 = "insert into bill (book_id, amount, bill_date, gst, st) values \
+         (" +str(book_id)+ "," +str(payable_amount)+ "," +str(check_out)+ "," +str(gst)+ "," +str(st)+ ");"
   cursor.execute(sql1)
   cursor.execute(sql2)
   cursor.execute(sql3)
@@ -267,7 +271,7 @@ def search_rooms():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   room_no = input('Enter Room No : ')
-  sql = 'select * from rooms where room_no =' +room-no+ ';'
+  sql = "select * from rooms where room_no =" +room_no+ ";"
   cursor.execute(sql)
   record = cursor.fetchone()
   clear()
@@ -308,9 +312,9 @@ def search_customer():
     field_name = 'id_proof_no'
   value = input('Enter Value That You want To Search : ')
   if field_name == 'id' :
-    sql = 'select * from customer where ' +field_name+ '=' +value+ ';'
+    sql = "select * from customer where" +field_name+ "=" +value+ ";"
   else :
-    sql = 'select * from customer where ' +field_name+ 'like "%' +value+'%";'
+    sql = "select * from customer where" +field_name+ "like %" +value+ "%;"
   print(sql)
   cursor.execute(sql)
   records = cursor.fetchall()
@@ -319,7 +323,7 @@ def search_customer():
   print('*'*140)
   print('{} {:20s} {:30s} {:15s} {:30s} {:20s} {:15s}'.format('Id', 'Name', 'Address', 'Phone', 'Email', 'Id Used', 'Id No'))
   for record in records :
-  print('{} {:20s} {:30s} {:15s} {:30s} {:20s} {:15s}'.format(record[0], record[1], record[2], record[3], record[4], record[5], record[6]))
+      print('{} {:20s} {:30s} {:15s} {:30s} {:20s} {:15s}'.format(record[0], record[1], record[2], record[3], record[4], record[5], record[6]))
   conn.close()
   wait = input('\n\n\n Press Any Key To Continue..........')
 
@@ -327,7 +331,7 @@ def search_booking():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   cust_no = input('Enter Customer No :')
-  sql = 'select book_id, r.room_no, c.name, check_in, advance  from booking b, customer c, rooms r where b.room_id = r.id AND b.cust_id =' +cust_id+
+  sql = "select book_id, r.room_no, c.name, check_in, advance  from booking b, customer c, rooms r where b.room_id = r.id AND b.cust_id =" +cust_id+ ';'
   cursor.execute(sql)
   record = cursor.fetchall()
   clear()
@@ -336,14 +340,18 @@ def search_booking():
   print('*'*140)
   for record in records:
     print('{} {} {} {} {}'.format(record[0], record[1], record[2], record[3], record[4]))
-    conn.close()\
-    wait = input('\n\n\n Press Any Key To Continue ............')
+  conn.close()
+  wait = input('\n\n\n Press Any Key To Continue ............')
 
 def search_bills():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel',  user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   bill_no = input('Enter Bill No : ')
-  sql = 'select bill.bill_id, bill.amount, bill.date, gst, st, b.book_id, check_in, check_out, advance, name, address, phone, email, room_no \ from bill, booking b, customer c, rooms r \ where bill.book_id = b.book_id \ and b.room_id = r.id and b.cust_id = c.id AND NOT check_out is NULL AND \ bill_id = ' +bill_no+ ';'
+  sql = "select bill.bill_id, bill.amount, bill.date, gst, st, b.book_id, check_in, check_out, advance, name, address, phone, email, room_no \
+         from bill, booking b, customer c, rooms r \
+         where bill.book_id = b.book_id \
+         and b.room_id = r.id and b.cust_id = c.id AND NOT check_out is NULL AND \
+         bill_id =" +bill_no+ ";"
   cursor.execute(sql)
   record = cursor.fetchone()
   clear()
@@ -392,7 +400,7 @@ def search_menu():
 def report_room_status():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
-  sql = 'select * from rooms'
+  sql = "select * from rooms"
   cursor.execute(sql)
   records = cursor.fetchall()
   clear()
@@ -407,7 +415,8 @@ def report_room_status():
 def report_booking_status():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
-  sql = 'select b.book_id, room_no, check_in, check_out, advance, name, address, phone \ where b.room_id = r.id and b.cust_id and check_out is NULL;'
+  sql = "select b.book_id, room_no, check_in, check_out, advance, name, address, phone \
+         where b.room_id = r.id and b.cust_id and check_out is NULL;"
   cursor.execute(sql)
   records = cursor.fetchall()
   clear()
@@ -447,7 +456,7 @@ def change_room_status():
   clear()
   room_no = input('Enter Room No : ')
   status = input('Enter current Status (Renovation / Modification) : ')
-  sql = 'update rooms set status ="'+status+'" where room_no =' +room_no+ ';'
+  sql = "update rooms set status =" +status+ "where room_no =" +room_no+ ";"
   cursor.execute(sql)
   print('\n\n Room Status Updated')
   wait = input('\n\n\n Press Any Key To Continue')
@@ -490,9 +499,10 @@ def main_menu():
     if choice == 10 :
       break
       
-if__name__ == "__main__" :
+if __name__ == "__main__" :
   settings()
   main_menu()
-  
 
+
+print(".................................THANK YOU....................................")
     
