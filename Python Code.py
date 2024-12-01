@@ -18,7 +18,7 @@ st = 0
 
 def settings():
   global hotel_name
-  global addr
+  global address
   global phone
   global email
   global gst
@@ -33,11 +33,11 @@ for record in records:
   if record[1] == 'hotel_name':
     hotel_name = record[2]
   if record[1] == 'address':
-    addr = record[2]
+    address = record[2]
   if record[1] == 'phone':
     phone = record[2]
   if record[1] == 'email':
-    emil = record[2]
+    email = record[2]
   if record[1] == 'gst':
     gst = record[2]
   if record[1] == 'st':
@@ -70,7 +70,7 @@ def system_settings():
   if choice == 6:
     field_name = 'st'
   value = input('Enter New value:')
-  sql = "update setting set value =" +value+ "where field_name =" + field_name+ ";"
+  sql = "update setting set value =%s where field_name =%s ;"
   cursor.execute(sql)
   conn.close()
   wait = input('\n\n\n Record updated ................ Press Any Key To Continue........')
@@ -82,7 +82,7 @@ def clear():
 def room_exist(room_no):
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
-  sql = "select * from rooms where room_no =" +room_no+ ";"
+  sql = "select * from rooms where room_no =%s ;"
   cursor.execute(sql)
   record = cursor.fetchone()
   return record
@@ -90,7 +90,7 @@ def room_exist(room_no):
 def customer_exist(cust_no):
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
-  sql = "select * from customer where id =" +cust_no+ ";"
+  sql = "select * from customer where id =%s ;"
   cursor.execute(sql)
   record = cursor.fetchone()
   return record
@@ -102,11 +102,10 @@ def add_room():
   print('Add New Room - Screen')
   print('-'*120)
   room_no = input('\n Enter Room No : ')
-  room_type = input('\n Enter Room Type (AC / DELUX / SUPER DELUX / QUEEN DELIGHT / KINGS SPECIAL / SUPER RICH SPECIAL) : ')
+  room_type = input('\n Enter Room Type (AC / DELUX / SUPER DELUX / QUEEN DELIGHT / KINGS SPECIAL / SUPER RICH  SPECIAL) : ')
   room_rent = input('\n Enter Room Rent (INR) : ')
   room_bed = input('\n Enter Room Bed Type  (SINGLE / DOUBLE / TRIPLE) : ')
-  sql = "insert into rooms (room_no, room_type, room_rent, bed, status) values \
-        (" +room_no+ "," +room_type.upper()+ "," +room_rent+ "," +room_bed.upper()+ "," "free" ");"
+  sql = "insert into rooms (room_no, room_type, room_rent, bed, status) values ( %s, %s, %s, %s", "free", ";"
   result = room_exist(room_no)
   if result is None:
     cursor.execute(sql)
@@ -134,7 +133,7 @@ def modify_room():
     field_name = 'room_bed'
   room_no = input('Enter Room No : ')
   value = input('Enter New Value : ')
-  sql = "update rooms set" +field_name+ '=' +value+ "where room_no =" +room_no+ ";"
+  sql = "update rooms set field_name = %s where room_no = %s ;"
   cursor.execute(sql)
   wait = input('\n\n\n Record Updated ................. Press Any Key To Continue......')
 
@@ -154,8 +153,8 @@ def add_customer():
   females = input('\n Enter Total Females : ')
   children = input('\n Enter Total Children : ')
   sql = "insert into customer(name, address, phone, email, id_proof, id_proof_no, males, females, children) values \
-        (" +name+ "," +address+ "," +phone+ "," +email+ "," +id_proof+ "," +id_proof_no+ "," +males+ "," +females+ "," +children+ ");"
-  cursor.execute(sql)
+        (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+  cursor.execute(sql,(name,address,phone,email,id_proof,id_proof_no,males,females,children))
   print('\n\n\n Customer Added Successfully .......... ')
   conn.close()
   wait = input('\n\n\n Press Any Key To Continue ....... ')
@@ -197,7 +196,7 @@ def modify_customer():
     field_name = 'children'
   cust_no = input('Enter Customer No : ')
   value = input('Enter New Value : ')
-  sql = "update customer set" +field_name+ "=" +value+ "where id =" +cust_no+ ";"
+  sql = "update customer set field_name = %s where id =%s ;"
   cursor.execute(sql)
   wait = input('\n\n\n Record Updated ........... Press Any Key To Continue........')
 
@@ -208,16 +207,15 @@ def room_booking():
   cust_id = input('Enter Customer Id : ')
   check_in = input('Enter Check In Date (YYYY-MM-DD) : ')
   advance = input('Enter Advance Amount : ')
-  sql1 = "update rooms set status =" "occupied" "where id =" +room_id+ ";"
-  sql2 = "insert into booking (room_id, cust_id, check-in, advance) values \
-(" +room_id+ "," +cust_id+ "," +check_in+ "," +advance+ ");"
+  sql1 = "update rooms set status =occupied where id =%s ;"
+  sql2 = "insert into booking (room_id, cust_id, check_in, advance) values (%s,%s,%s,%s);"
   #print(sql2)
   #print(sql1)
   result = room_exist(room_id)
   result1 = customer_exist(cust_id)
   if result[5] == 'free' and result1 is not None :
     cursor.execute(sql1)
-    cursor.execute(sql2)
+    cursor.execute(sql2,(room_id,cust_id,check_in,advance))
     print('\n\n\n Room No', room_id, 'booked for', cust_id)
   if result[5] != 'free' :
     print('\n Room Is Not Available For Booking. Right Now It Is : ', result[5])
@@ -233,7 +231,7 @@ def bill_generation():
   cursor = conn.cursor()
   room_id = input('Enter Room No To Book : ')
   cust_id = input('Enter Customer Id : ')
-  sql = "select * from booking where cust_id = " +cust_id+ "and room_id =" +room_id+  "and check_out is NULL;"
+  sql = "select * from booking where cust_id =%s and room_id =%s and check_out is NULL;"
   cursor.execute(sql)
   record = cursor.fetchone()
   clear()
@@ -257,13 +255,12 @@ def bill_generation():
   print('Total Amount : ', amount )
   print('Advance : ', advance, '\n GST ({}) : {}' .format(gst, gst_amount), '\n Service Tax ({}) : {}' .format(st, st_amount))
   print('Amount Payable : ', payable_amount)
-  sql1 = "update rooms set status =" "free" "where room_no =" +room_id+ ";"
-  sql2 = "update booking set check_out =" +str(check_out)+ "where room_id =" +room_id+ "and cust_id =" +cust_id+ ";"
-  sql3 = "insert into bill (book_id, amount, bill_date, gst, st) values \
-         (" +str(book_id)+ "," +str(payable_amount)+ "," +str(check_out)+ "," +str(gst)+ "," +str(st)+ ");"
+  sql1 = "update rooms set status =free where room_no =%s ;"
+  sql2 = "update booking set check_out =%s where room_id =%s and cust_id =%s ;"
+  sql3 = "insert into bill (book_id, amount, bill_date, gst, st) values (%s, %s, %s, %s, %s);"
   cursor.execute(sql1)
   cursor.execute(sql2)
-  cursor.execute(sql3)
+  cursor.execute(sql3,(book_id,amount,bill_date,gst,st))
   conn.close()
   wait = input('\n\n\n Press Any Key To Continue..........')
 
@@ -271,7 +268,7 @@ def search_rooms():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   room_no = input('Enter Room No : ')
-  sql = "select * from rooms where room_no =" +room_no+ ";"
+  sql = "select * from rooms where room_no =%s ;"
   cursor.execute(sql)
   record = cursor.fetchone()
   clear()
@@ -312,9 +309,9 @@ def search_customer():
     field_name = 'id_proof_no'
   value = input('Enter Value That You want To Search : ')
   if field_name == 'id' :
-    sql = "select * from customer where" +field_name+ "=" +value+ ";"
+    sql = "select * from customer where field_name =%s ;"
   else :
-    sql = "select * from customer where" +field_name+ "like %" +value+ "%;"
+    sql = "select * from customer where field_name like %s ;"
   print(sql)
   cursor.execute(sql)
   records = cursor.fetchall()
@@ -331,7 +328,7 @@ def search_booking():
   conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
   cursor = conn.cursor()
   cust_no = input('Enter Customer No :')
-  sql = "select book_id, r.room_no, c.name, check_in, advance  from booking b, customer c, rooms r where b.room_id = r.id AND b.cust_id =" +cust_id+ ';'
+  sql = "select book_id, r.room_no, c.name, check_in, advance  from booking b, customer c, rooms r where b.room_id = r.id AND b.cust_id =%s ;"
   cursor.execute(sql)
   record = cursor.fetchall()
   clear()
@@ -351,7 +348,7 @@ def search_bills():
          from bill, booking b, customer c, rooms r \
          where bill.book_id = b.book_id \
          and b.room_id = r.id and b.cust_id = c.id AND NOT check_out is NULL AND \
-         bill_id =" +bill_no+ ";"
+         bill_id =%s ;"
   cursor.execute(sql)
   record = cursor.fetchone()
   clear()
@@ -456,7 +453,7 @@ def change_room_status():
   clear()
   room_no = input('Enter Room No : ')
   status = input('Enter current Status (Renovation / Modification) : ')
-  sql = "update rooms set status =" +status+ "where room_no =" +room_no+ ";"
+  sql = "update rooms set status =%s where room_no =%s ;"
   cursor.execute(sql)
   print('\n\n Room Status Updated')
   wait = input('\n\n\n Press Any Key To Continue')
