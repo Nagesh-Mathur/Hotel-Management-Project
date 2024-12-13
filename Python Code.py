@@ -15,8 +15,6 @@ phone = ''
 email = ''
 gst = 0
 st = 0
-result=''
-result1=''
 
 def settings():
         global hotel_name
