@@ -15,9 +15,8 @@ phone = ''
 email = ''
 gst = 0
 st = 0
-
-conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '12345')
-cursor = conn.cursor()
+result=''
+result1=''
 
 def settings():
         global hotel_name
@@ -26,24 +25,27 @@ def settings():
         global email
         global gst
         global st
-
-        sql = "select * from setting;"
-        cursor.execute(sql)
-        conn.commit()
-        records = cursor.fetchall()
-        for record in records:
-                if record[1] == 'hotel_name':
-                        hotel_name = record[2]
-                if record[1] == 'address':
-                        address = record[2]
-                if record[1] == 'phone':
-                        phone = record[2]
-                if record[1] == 'email':
-                        email = record[2]
-                if record[1] == 'gst':
-                        gst = record[2]
-                if record[1] == 'st':
-                        st = record[2]
+        
+conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = '12345')
+cursor = conn.cursor()
+sql = "select * from setting;"
+cursor.execute(sql)
+records = cursor.fetchall()
+for record in records:
+        if record[1] == 'hotel_name':
+                hotel_name = record[2]
+        elif record[1] == 'address':
+                address = record[2]
+        elif record[1] == 'phone':
+                phone = record[2]
+        elif record[1] == 'email':
+                email = record[2]
+        elif record[1] == 'gst':
+                gst = record[2]
+        elif record[1] == 'st':
+                st = record[2]
+        else:
+                print("out of range")
 
 def system_settings():
         print('Change System Settings')
@@ -58,20 +60,22 @@ def system_settings():
         field_name = ''
         if choice == 1:
                 field_name = 'hotel_name'
-        if choice == 2:
+        elif choice == 2:
                 field_name = 'address'
-        if choice == 3:
+        elif choice == 3:
                 field_name = 'phone'
-        if choice == 4:
+        elif choice == 4:
                 field_name = 'email'
-        if choice == 5:
+        elif choice == 5:
                 field_name = 'gst'
-        if choice == 6:
+        elif choice == 6:
                 field_name = 'st'
+        else:
+                print("out of range")
+
         value = input('Enter New value:')
         sql = "update setting set value =%s where field_name =%s ;"
         cursor.execute(sql)
-        conn.commit()
         wait = input('\n\n\n Record updated ................ Press Any Key To Continue........')
 
 def clear():
@@ -81,18 +85,17 @@ def clear():
 def room_exist(room_no):
         sql = "select * from rooms where room_no =%s ;"
         cursor.execute(sql)
-        conn.commit()
         record = cursor.fetchone()
         return record
 
 def customer_exist(cust_no):
         sql = "select * from customer where id =%s ;"
         cursor.execute(sql)
-        conn.commit()
         record = cursor.fetchone()
         return record
 
 def add_room():
+        clear()
         print('Add New Room - Screen')
         print('-'*120)
         room_no = input('\n Enter Room No : ')
@@ -117,10 +120,12 @@ def modify_room():
         field_name = ''
         if choice == 1:
                 field_name = 'room_type'
-        if choice == 2:
+        elif choice == 2:
                 field_name = 'room_rent'
-        if choice == 3:
+        elif choice == 3:
                 field_name = 'room_bed'
+        else:
+                print("out of range")
         room_no = input('Enter Room No : ')
         value = input('Enter New Value : ')
         sql = "update rooms set field_name = %s where room_no = %s ;"
@@ -184,14 +189,12 @@ def modify_customer():
         wait = input('\n\n\n Record Updated ........... Press Any Key To Continue........')
 
 def room_booking():
-        room_id = input('Enter Room No To Book : ')
-        cust_id = input('Enter Customer Id : ')
+        room_id = int(input('Enter Room No To Book : '))
+        cust_id = int(input('Enter Customer Id : '))
         check_in = input('Enter Check In Date (YYYY-MM-DD) : ')
-        advance = input('Enter Advance Amount : ')
-        sql1 = "update rooms set status =occupied where id =%s ;"
-        sql2 = "insert into booking (room_id, cust_id, check_in, advance) values (%s,%s,%s,%s);"
-        #print(sql2)
-        #print(sql1)
+        advance = float(input('Enter Advance Amount : '))
+        sql1 = "update rooms set status = 'occupied' where id =%s ;"
+        sql2 = "insert into booking(room_id, cust_id, check_in,advance) values (%s,%s,%s,%s);"
         result = room_exist(room_id)
         result1 = customer_exist(cust_id)
         if result[5] == 'free' and result1 is not None :
@@ -311,10 +314,10 @@ def search_booking():
 def search_bills():
         bill_no = input('Enter Bill No : ')
         sql = "select bill.bill_id, bill.amount, bill.date, gst, st, b.book_id, check_in, check_out, advance, name, address, phone, email, room_no \
-               from bill, booking b, customer c, rooms r \
-               where bill.book_id = b.book_id \
-               and b.room_id = r.id and b.cust_id = c.id AND NOT check_out is NULL AND \
-               bill_id =%s ;"
+                  from bill, booking b, customer c, rooms r \
+                  where bill.book_id = b.book_id \
+                  and b.room_id = r.id and b.cust_id = c.id AND NOT check_out is NULL AND \
+                  bill_id =%s ;"
         cursor.execute(sql)
         record = cursor.fetchone()
         clear()
