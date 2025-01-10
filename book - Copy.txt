@@ -1,0 +1,52 @@
+def bill_generation():
+    global gst
+    global st
+    room_id = int(input('Enter Room No To Book : '))  # Convert input to integer
+    cust_id = int(input('Enter Customer Id : '))
+    sql = "select * from booking where cust_id =%s and room_id =%s and check_out is NULL;"
+    cursor.execute(sql, (cust_id, room_id))  # Pass parameters to the query
+    record = cursor.fetchone()
+
+    # Check if the record exists
+    if record is None:
+        print("No active booking found for this room and customer.")
+        return
+
+    clear()
+    print('Bill Generation')
+    print('-'*100)
+    print('Rooms Occupied : ', room_id)
+    check_out = date.today()  # Get today's date
+    book_id = record[0]  
+    check_in = record[3]
+    advance = record[5]
+    total_days = (check_out - check_in).days
+    result = room_exist(room_id)
+    rent = result[3]
+    amount = total_days * rent 
+    gst_amount = amount * int(gst) / 100
+    st_amount = amount * int(st) / 100
+    payable_amount = amount - advance + gst_amount + st_amount
+
+    print('Check In Date : ', check_in, '\n Check Out Date : ', check_out)
+    print('Total Payable Days :', total_days)
+    print('Room Rent Per Day :', rent)
+    print('Total Amount : ', amount)
+    print('Advance : ', advance, '\n GST ({}) : {}'.format(gst, gst_amount), '\n Service Tax ({}) : {}'.format(st, st_amount))
+    print('Amount Payable : ', payable_amount)
+
+    bill_date = date.today()  # Assign the bill date
+
+    sql1 = "update rooms set status = 'free' where room_no = %s ;"
+    sql2 = "update booking set check_out = %s where room_id = %s and cust_id = %s ;"
+    sql3 = "insert into bill (book_id, amount, bill_date, gst, st) values (%s, %s, %s, %s, %s);"
+
+    # Execute the SQL queries
+    cursor.execute(sql1, (room_id,))
+    cursor.execute(sql2, (check_out, room_id, cust_id))
+    cursor.execute(sql3, (book_id, amount, bill_date, float(gst), float(st)))
+
+    # Commit changes to the database
+    conn.commit()
+
+    wait = input('\n\n\n Press Any Key To Continue..........')
