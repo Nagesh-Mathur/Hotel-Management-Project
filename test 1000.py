@@ -1,73 +1,70 @@
 import mysql.connector
-from datetime import date
 
-# Global Variables
-hotel_name = ''
-address = ''
-phone = ''
-email = ''
-gst = 0
-st = 0
-result = ''
-result1 = ''
-
-        
-conn = mysql.connector.connect(host = 'localhost', database = 'hotel', user = 'root', password = 'Nagesh@38')
-cursor = conn.cursor()
-
-
-def room_exist(room_no):
-    sql = "select * from rooms where room_no =%s ;"
-    cursor.execute(sql)
-    record = cursor.fetchone()
-    return record
-
-def customer_exist(cust_no):
-    sql = "select * from customer where id =%s ;"
-    cursor.execute(sql)
-    record = cursor.fetchone()
-    return record        
-
-
-def room_booking():
-    try:
-        # Step 1: Take input from the user
-        room_id = int(input('Enter Room No To Book : '))  # Room number to book
-        cust_id = int(input('Enter Customer Id : '))  # Customer ID
-        check_in = input('Enter Check In Date (YYYY-MM-DD) : ')  # Check-in date
-        advance = float(input('Enter Advance Amount : '))  # Advance payment made by customer
-        
-        # Step 2: Check if the room exists and is available
-        result = room_exist(room_id)  # Calls function to check room availability
-        result1 = customer_exist(cust_id)  # Calls function to check if the customer exists
-
-        # Step 3: Proceed if room is free and customer exists
-        if result and result1:  # Ensure both room and customer data were returned
-            if result[5] == 'free':  # Check if the room is free
-                # SQL Query to update room status to 'occupied'
-                sql1 = "UPDATE rooms SET status = 'occupied' WHERE id = %s;"
-                cursor.execute(sql1, (room_id,))
-                
-                # SQL Query to insert booking details into booking table
-                sql2 = "INSERT INTO booking(room_id, cust_id, check_in, advance) VALUES (%s, %s, %s, %s);"
-                cursor.execute(sql2, (room_id, cust_id, check_in, advance))
-                
-                # Commit the transaction to save changes in the database
-                conn.commit()
-                print(f'\n\n\n Room No {room_id} booked for Customer ID {cust_id}')
-            else:
-                print(f'\n Room Is Not Available For Booking. Right Now It Is: {result[5]}')
-        else:
-            if result1 is None:
-                print('Customer Does Not Exist ..... Please Add Customer First in Our Database')
-            elif result is None:
-                print('Room Does Not Exist.')
-            else:
-                print("Error: Unable to process the booking.")
-        
-    except Exception as e:
-        print(f"Error: {e}")
+def room_booking(conn, cursor):
+    room_id = int(input('Enter Room No To Book: '))
+    cust_id = int(input('Enter Customer Id: '))
+    check_in = input('Enter Check In Date (YYYY-MM-DD): ')
+    advance = float(input('Enter Advance Amount: '))
     
-    # Step 4: Wait for user action
-    wait = input('\n\n\n Press Any Key To Continue.......')
-room_booking()
+    # SQL queries to update room status and insert booking details
+    sql_update_room = "UPDATE rooms SET status = 'occupied' WHERE id = %s;"
+    sql_insert_booking = "INSERT INTO booking(room_id, cust_id, check_in, advance) VALUES (%s, %s, %s, %s);"
+    
+    # Check if the room and customer exist
+    if not room_exist(room_id, cursor):
+        print(f"Room No {room_id} does not exist.")
+    else:
+        room_details = get_room_details(room_id, cursor)
+        if room_details[5] == 'free' and customer_exist(cust_id, cursor):
+            try:
+                # Execute the queries to update room status and insert booking
+                cursor.execute(sql_update_room, (room_id,))
+                cursor.execute(sql_insert_booking, (room_id, cust_id, check_in, advance))
+                
+                # Commit the transaction
+                conn.commit()
+                print(f'\n\nRoom No {room_id} booked for Customer ID {cust_id} successfully!')
+            except mysql.connector.Error as err:
+                print(f"Error occurred: {err}")
+                conn.rollback()  # Rollback if there is any error
+        elif room_details[5] != 'free':
+            print(f'\nRoom No {room_id} is not available for booking. Current status: {room_details[5]}')
+        else:
+            print('Customer does not exist. Please add the customer first in the database.')
+
+    input('\n\nPress Any Key To Continue...')
+
+# Define the room_exist function
+def room_exist(room_id, cursor):
+    cursor.execute("SELECT 1 FROM rooms WHERE id = %s;", (room_id,))
+    return cursor.fetchone() is not None  # Return True if room exists, False otherwise
+
+# Define the get_room_details function
+def get_room_details(room_id, cursor):
+    cursor.execute("SELECT * FROM rooms WHERE id = %s;", (room_id,))
+    return cursor.fetchone()  # Return room details tuple
+
+# Define the customer_exist function
+def customer_exist(cust_id, cursor):
+    cursor.execute("SELECT 1 FROM customer WHERE id = %s;", (cust_id,))
+    return cursor.fetchone() is not None  # Return True if customer exists, False otherwise
+
+# Main logic to establish connection
+try:
+    conn = mysql.connector.connect(
+        host='localhost', 
+        user='root', 
+        password='Nagesh@38', 
+        database='hotel'
+    )
+    cursor = conn.cursor()
+
+    # Call the room_booking function with the connection and cursor
+    room_booking(conn, cursor)
+    
+except mysql.connector.Error as err:
+    print(f"Database connection error: {err}")
+finally:
+    if conn.is_connected():
+        cursor.close()
+        conn.close()
